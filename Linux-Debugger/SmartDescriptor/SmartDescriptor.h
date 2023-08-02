@@ -17,20 +17,13 @@ public:
     SmartDescriptor(T&& descriptor) noexcept : _descriptor(std::forward<T>(descriptor)) {}
 
     ~SmartDescriptor() noexcept {
-
-        des_close(std::move(_descriptor));
-
-        //if constexpr (std::is_same<decltype(T::close), void>::value) {
-        //    _descriptor.close();
-        //} else if(std::is_same<T, int>::value) {
-        //    if (fd_is_valid(_descriptor)) {
-        //        close(_descriptor);
-        //    }
-        //} else if (std::is_same<T, _IO_FILE*>::value) {
-        //    fclose(_descriptor);
-        //} else {
-//
-        //}
+        if constexpr (has_close::value) {
+            _descriptor.close();
+        } else {
+            if (fd_is_valid(_descriptor)) {
+                close(_descriptor);
+            }
+        }
     }
 
     operator T&() {
@@ -38,18 +31,24 @@ public:
     }
 private:
     T _descriptor;
+    
+    struct has_close
+    {
+        private:
+            typedef char yes;
+            typedef struct { yes dummy[2]; } no;
 
-    void des_close(_IO_FILE* u) {
-        fclose(_descriptor);
-    }
+            template<typename U>
+            static auto check(U* u) -> decltype((*u).close(), yes());
+            
+            static no check(...);
+        public:
+        enum {
+            value = (sizeof(check((T*)0)) == sizeof(yes))
+        };
 
-    void des_close(int u) {
-        close(_descriptor);
-    }
-
-    void des_close(...) {
-        _descriptor.close();
-    }
+    };
+    
 
     int fd_is_valid(int fd)
     {
