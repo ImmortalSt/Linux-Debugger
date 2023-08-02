@@ -4,24 +4,30 @@
 #include "../SmartDescriptor/SmartDescriptor.h"
 #include <fcntl.h>
 #include <vector>
-#include "Module/Module.h"
 #include <cstring>
 #include <string>
 #include <regex>
+#include "Module/Maps.h"
 
 namespace dbg
 {
     class Process {
     public:
+        Maps maps;
+
+
         Process(uint16_t pid);
-        Process(char* processName);
+        Process(const char* processName);
         ~Process();
 
         template <typename T> T Read(uint64_t address) {
             T value = 0;
-            SmartDescriptor<int> mem(open(_procPath.append("mem").c_str(), O_RDONLY));
-            lseek64(mem, address, SEEK_SET);
-            read(mem, &value, sizeof(value));
+            std::string a = _procPath.append("mem");
+            auto ad = fopen(a.c_str(), "rb");
+            perror("dd");
+            SmartDescriptor<FILE*> mem(fopen(a.c_str(), "rb"));
+            fseek(mem, address, SEEK_SET);
+            fread(&value, sizeof(T), 1, mem);
             return value;
         }
 
@@ -31,8 +37,6 @@ namespace dbg
 
         uint16_t _pid;
         std::string _procPath;
-        
-        std::vector<Module> _modules;
     };
 
 } 

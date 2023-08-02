@@ -9,6 +9,6 @@
 
 int main() {
     dbg::Process proc("./a.out");
-    auto a = proc.Read<char>(0x0);
+    auto a = proc.Read<char>(proc.maps.GetBaseAddress() + 0x2004);
     int b  = 0;
 } 
