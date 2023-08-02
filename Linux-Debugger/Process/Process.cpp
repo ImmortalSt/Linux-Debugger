@@ -1,6 +1,6 @@
 #include "Process.h"
 
-dbg::Process::Process(uint16_t _pid)
+dbg::Process::Process(uint64_t _pid)
 {
     init(_pid);
 }
@@ -40,7 +40,7 @@ dbg::Process::Process(const char *processName)
 
 dbg::Process::~Process() {}
 
-void dbg::Process::init(uint16_t pid)
+void dbg::Process::init(uint64_t pid)
 {
     _pid = pid;
     _procPath = "/proc/" + std::to_string(pid) + "/";

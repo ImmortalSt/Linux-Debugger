@@ -16,7 +16,7 @@ namespace dbg
         Maps maps;
 
 
-        Process(uint16_t pid);
+        Process(uint64_t pid);
         Process(const char* processName);
         ~Process();
 
@@ -24,7 +24,6 @@ namespace dbg
             T value = 0;
             std::string a = _procPath.append("mem");
             auto ad = fopen(a.c_str(), "rb");
-            perror("dd");
             SmartDescriptor<FILE*> mem(fopen(a.c_str(), "rb"));
             fseek(mem, address, SEEK_SET);
             fread(&value, sizeof(T), 1, mem);
@@ -32,10 +31,10 @@ namespace dbg
         }
 
     private:
-        void init(uint16_t pid);
+        void init(uint64_t pid);
         void initMaps();
 
-        uint16_t _pid;
+        uint64_t _pid;
         std::string _procPath;
     };
 
