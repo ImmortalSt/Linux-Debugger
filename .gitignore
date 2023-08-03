@@ -35,3 +35,4 @@
 .clangd/
 .vscode/
 build/
+.vscode-root/

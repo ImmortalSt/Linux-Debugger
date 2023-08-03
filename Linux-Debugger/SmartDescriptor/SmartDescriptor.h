@@ -17,20 +17,18 @@ public:
     SmartDescriptor(T&& descriptor) noexcept : _descriptor(std::forward<T>(descriptor)) {}
 
     ~SmartDescriptor() noexcept {
+        if constexpr (sizeof(des_close((T*)0)) == sizeof(external_fclose)) {
+            if (_descriptor != 0)
+                fclose(_descriptor);
+        }
+        if constexpr (sizeof(des_close((T*)0)) == sizeof(external_close)) {
+            if(_descriptor != -1)
+                close(_descriptor);
+        }
+        if constexpr (sizeof(des_close((T*)0)) == sizeof(internal_close)) {
+            _descriptor.close();
+        }
 
-        des_close(std::move(_descriptor));
-
-        //if constexpr (std::is_same<decltype(T::close), void>::value) {
-        //    _descriptor.close();
-        //} else if(std::is_same<T, int>::value) {
-        //    if (fd_is_valid(_descriptor)) {
-        //        close(_descriptor);
-        //    }
-        //} else if (std::is_same<T, _IO_FILE*>::value) {
-        //    fclose(_descriptor);
-        //} else {
-//
-        //}
     }
 
     operator T&() {
@@ -39,17 +37,17 @@ public:
 private:
     T _descriptor;
 
-    void des_close(_IO_FILE* u) {
-        fclose(_descriptor);
-    }
+    typedef struct { char a; } external_fclose;
+    typedef struct { char a[2]; } external_close;
+    typedef struct { char a[3]; } internal_close;
 
-    void des_close(int u) {
-        close(_descriptor);
-    }
+    template<typename U>
+    static auto  des_close(U* u) -> decltype(fclose(*u), external_fclose());
+    template<typename U>
+    static auto  des_close(U* u) -> decltype(close(*u), external_close());
+    template<typename U>
+    static auto  des_close(U* u) -> decltype((*u).close(), internal_close());
 
-    void des_close(...) {
-        _descriptor.close();
-    }
 
     int fd_is_valid(int fd)
     {

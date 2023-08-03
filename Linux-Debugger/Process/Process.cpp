@@ -42,6 +42,7 @@ dbg::Process::~Process() {}
 
 void dbg::Process::init(uint64_t pid)
 {
+    
     _pid = pid;
     _procPath = "/proc/" + std::to_string(pid) + "/";
     initMaps();
