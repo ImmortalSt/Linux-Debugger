@@ -28,6 +28,9 @@ public:
         if constexpr (sizeof(des_close((T*)0)) == sizeof(internal_close)) {
             _descriptor.close();
         }
+        if constexpr (sizeof(des_close((T*)0)) == sizeof(external_closedir)) {
+            closedir(_descriptor);
+        }
 
     }
 
@@ -40,6 +43,7 @@ private:
     typedef struct { char a; } external_fclose;
     typedef struct { char a[2]; } external_close;
     typedef struct { char a[3]; } internal_close;
+    typedef struct { char a[4]; } external_closedir;
 
     template<typename U>
     static auto  des_close(U* u) -> decltype(fclose(*u), external_fclose());
@@ -47,6 +51,8 @@ private:
     static auto  des_close(U* u) -> decltype(close(*u), external_close());
     template<typename U>
     static auto  des_close(U* u) -> decltype((*u).close(), internal_close());
+    template<typename U>
+    static auto  des_close(U* u) -> decltype(closedir(*u), external_closedir());
 
 
     int fd_is_valid(int fd)

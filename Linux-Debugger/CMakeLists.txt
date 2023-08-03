@@ -7,4 +7,8 @@ add_executable(Linux-Debugger
     "Process/Module/Maps.h"
     "Process/Module/Maps.cpp"
     "Process/Module/Module.h"
+    "Process/Thread/Thread.h"
+    "Process/Thread/Thread.cpp"
+    "Process/Thread/ThreadList.h"
+    "Process/Thread/ThreadList.cpp"
 )

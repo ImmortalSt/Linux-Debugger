@@ -5,10 +5,12 @@
 #include <unistd.h>
 #include "Process/Process.h"
 #include "SmartDescriptor/SmartDescriptor.h"
-
+#include <sys/ptrace.h>
+#include <sys/wait.h>
+#include <sys/user.h>
 
 int main() {
     dbg::Process proc("./a.out");
-    auto a = proc.Read<char>(proc.maps.GetBaseAddress() + 0x2004);
+    struct user_regs_struct regs;
     int b  = 0;
 } 

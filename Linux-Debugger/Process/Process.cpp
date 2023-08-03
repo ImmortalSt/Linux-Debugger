@@ -15,7 +15,7 @@ bool is_number(char *str)
 
 dbg::Process::Process(const char *processName)
 {
-    DIR *procDir = opendir("/proc/");
+    SmartDescriptor<DIR*> procDir(opendir("/proc/"));
 
     dirent *entry;
     while ((entry = readdir(procDir)) != nullptr)
@@ -36,19 +36,32 @@ dbg::Process::Process(const char *processName)
             }
         }
     }
+
 }
 
 dbg::Process::~Process() {}
 
 void dbg::Process::init(uint64_t pid)
 {
-    
     _pid = pid;
     _procPath = "/proc/" + std::to_string(pid) + "/";
     initMaps();
+    initThreads();
 }
 
 void dbg::Process::initMaps()
 {
     maps = Maps(_pid);
+}
+void dbg::Process::initThreads(){
+    threads = ThreadList(_pid);
+}
+
+std::string dbg::Process::ReadString(uint64_t address){
+    std::string res = "";
+    char _c = 0;
+    for (int i = 0; _c = Read<char>(address + i), _c != 0; i++) {
+        res += _c;
+    }
+    return res;
 }
