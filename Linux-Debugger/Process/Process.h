@@ -34,7 +34,10 @@ namespace dbg
             fseek(mem, address, SEEK_SET);
             fwrite(&value, sizeof(T), 1, mem);
         }
-
+        
+        uint64_t GetPid();
+        void EnableDebugging();
+        void DisableDebugging();
     private:
         void init(uint64_t pid);
         void initMaps();

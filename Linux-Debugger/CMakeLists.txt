@@ -11,4 +11,9 @@ add_executable(Linux-Debugger
     "Process/Thread/Thread.cpp"
     "Process/Thread/ThreadList.h"
     "Process/Thread/ThreadList.cpp"
+    "Process/Debugger/Registers.h"
+    "Process/Debugger/DebuggerBase.h"
+    "Process/Debugger/DebuggerBase.cpp"
+    "Process/Debugger/HardwareDebugger/HardwareDebugger.h"
+    "Process/Debugger/HardwareDebugger/HardwareDebugger.cpp"
 )

@@ -17,7 +17,7 @@ ThreadList::ThreadList(uint64_t pid) {
     {
         if (is_number_str(entry->d_name)) {
 
-            _threads.push_back(Thread((char*)(threadsPath + entry->d_name).c_str()));
+            _threads.push_back(Thread(strtoull(entry->d_name, nullptr, 10)));
         }
     }
 }

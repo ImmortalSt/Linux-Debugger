@@ -65,3 +65,7 @@ std::string dbg::Process::ReadString(uint64_t address){
     }
     return res;
 }
+
+uint64_t dbg::Process::GetPid(){
+    return _pid;
+}
