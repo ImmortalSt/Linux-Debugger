@@ -5,7 +5,7 @@
 #include <sys/user.h>
 
 
-class HardwareDebugger : public DebuggerBase {
+class HardwareDebugger final : public DebuggerBase {
 public:
     enum condition {
         EXEC = 0,

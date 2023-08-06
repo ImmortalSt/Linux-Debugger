@@ -3,6 +3,7 @@
 Thread::Thread(uint64_t pid) {
     _pid = pid;
     _hardwareDebugger = HardwareDebugger(pid);
+    _softwareDebugger = SoftwareDebugger(pid);
 }
 Thread::~Thread() {}
 
@@ -43,4 +44,8 @@ long long Thread::GetRegister(x64userStructOffsets offset) {
 
 HardwareDebugger& Thread::GetHardwareDebugger() {
     return _hardwareDebugger;
+}
+
+SoftwareDebugger& Thread::GetSoftwareDebugger(){
+    return _softwareDebugger;
 }

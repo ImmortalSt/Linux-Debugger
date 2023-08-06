@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <sys/syscall.h>
 #include "../Debugger/HardwareDebugger/HardwareDebugger.h"
+#include "../Debugger/SoftwareDebugger/SoftwareDebugger.h"
 
 typedef struct user_regs_struct context;
 typedef struct user extended_context;
@@ -22,10 +23,13 @@ public:
     context GetContext();
     void SetRegister(x64userStructOffsets offset, long long value);
     long long int GetRegister(x64userStructOffsets offset);
+    
     HardwareDebugger& GetHardwareDebugger();
+    SoftwareDebugger& GetSoftwareDebugger();
 
 private:
     bool _isDebugging = false;
     uint64_t _pid = 0;
     HardwareDebugger _hardwareDebugger;
+    SoftwareDebugger _softwareDebugger;
 };

@@ -16,4 +16,6 @@ add_executable(Linux-Debugger
     "Process/Debugger/DebuggerBase.cpp"
     "Process/Debugger/HardwareDebugger/HardwareDebugger.h"
     "Process/Debugger/HardwareDebugger/HardwareDebugger.cpp"
+    "Process/Debugger/SoftwareDebugger/SoftwareDebugger.h"
+    "Process/Debugger/SoftwareDebugger/SoftwareDebugger.cpp"
 )

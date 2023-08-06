@@ -57,7 +57,9 @@ int HardwareDebugger::DelBreakpoint(uint64_t address) {
     return 0;
 }
 void HardwareDebugger::StartDebugLoop() {
-
+    while(1) {
+        std::cout << WaitException() << '\n';
+    }
 }
 
 
