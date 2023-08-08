@@ -15,7 +15,7 @@ public:
     };
 
     HardwareDebugger() : DebuggerBase(0) {}
-    HardwareDebugger(uint64_t pid) : DebuggerBase(pid) {}
+    HardwareDebugger(uint64_t pid);
     ~HardwareDebugger();
 
     int SetBreakpoint(uint64_t address, uint8_t condition, uint16_t size, void (*observer)(struct user_regs_struct regs)) override;
@@ -23,5 +23,12 @@ public:
     void StartDebugLoop() override;
 
 private:
-    std::array<std::function<void(struct user_regs_struct)>, 4> _osbservers;
+    typedef struct breakpointTAG {
+        uint64_t address = 0;
+        context_function observer = 0;
+    } breakpoint;
+
+    std::array<breakpoint, 4> _breakpoints;
+    
+    void ClearBreakpoints();
 };

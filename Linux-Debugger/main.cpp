@@ -1,3 +1,4 @@
+#include <bits/types/struct_iovec.h>
 #include <fstream>
 #include <stdio.h>
 #include <fcntl.h>
@@ -6,22 +7,20 @@
 #include "Process/Process.h"
 #include "SmartDescriptor/SmartDescriptor.h"
 #include <sys/ptrace.h>
-#include <sys/wait.h>
-#include <sys/user.h>
+#include <linux/elf.h>
 
 void Observer(context context) {
     std::cout << context.rsi << '\n';
 }
+
 
 int main() {
    
     dbg::Process proc("./a.out");
     proc.threads._threads[0].EnableDebugging();
     uint64_t addr = proc.maps.GetBaseAddress() + 0x115D;
-    proc.threads._threads[0].GetHardwareDebugger().SetBreakpoint(addr, SoftwareDebugger::condition::EXEC, 1, &Observer);
-    
-    //for (int i = 0; i < 8; i++)
-    //    std::cout << " Dr" << i << ": " << std::hex << proc.threads._threads[0].GetRegister((x64userStructOffsets)(x64userStructOffsets::u_debugreg + sizeof(long long) * i)) << '\n';
+
+    proc.threads._threads[0].GetHardwareDebugger().SetBreakpoint(addr, HardwareDebugger::condition::EXEC, 1, &Observer);
     
     
     proc.threads._threads[0].GetHardwareDebugger().StartDebugLoop();

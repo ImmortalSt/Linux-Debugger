@@ -16,7 +16,7 @@ struct user_regs_struct DebuggerBase::GetContext() {
 }
 int DebuggerBase::SetContext(struct user_regs_struct context) {
     if (ptrace(PTRACE_SETREGS, _pid, NULL, &context) == -1) {
-            perror("ptrace");
+            perror("ptrace PTRACE_SETREGS");
             return 1;
     }
     return 0;
