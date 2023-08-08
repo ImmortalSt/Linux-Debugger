@@ -1,6 +1,6 @@
 #include "SoftwareDebugger.h"
 #include <sys/ptrace.h>
-
+#include <signal.h>
 
 int SoftwareDebugger::SetBreakpoint(uint64_t address, uint8_t condition, uint16_t size, void(* observer)(user_regs_struct regs))
 {
@@ -23,6 +23,11 @@ int SoftwareDebugger::SetBreakpoint(uint64_t address, uint8_t condition, uint16_
 }
 
 int SoftwareDebugger::DelBreakpoint(uint64_t address) {
+    for (auto& bp : _breakpoints) {
+        if (bp.address == address) {
+            WriteByte(bp.address, bp.oldByte);
+        }
+    }
     return 0;
 }
 
@@ -36,28 +41,29 @@ void SoftwareDebugger::StartDebugLoop() {
         for (auto& bp : _breakpoints) {
             if (bp.address == context.rip - 1) {
                 WriteByte(bp.address, bp.oldByte);
-                auto d = ReadByte(bp.address);
                 context.rip -= 1;
                 SetContext(context);
                 DoDebugStep();
+                auto h = GetContext();
                 WriteByte(bp.address, 0xCC);
-
                 bp.observer(context);
+
                 break;
             }
         }
-        int d = 0;
     }
 }
 
 int SoftwareDebugger::WriteByte(uint64_t address, uint8_t byte) {
-    if (ptrace(PTRACE_POKETEXT, _pid, address, byte) != 0) {
-        perror("ptrace PTRACE_PEEKTEXT");
-        return 1;
-    }
-
+    Write<uint8_t>(address, byte);
     return 0;
 }
 uint8_t SoftwareDebugger::ReadByte(uint64_t address) {
-    return ptrace(PTRACE_PEEKTEXT, _pid, address, 0);
+    return Read<uint8_t>(address);
+}
+
+SoftwareDebugger::~SoftwareDebugger() {
+    for (auto& bp : _breakpoints) {
+        WriteByte(bp.address, bp.oldByte);
+    }
 }

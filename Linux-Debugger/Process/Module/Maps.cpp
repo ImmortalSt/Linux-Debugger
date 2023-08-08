@@ -4,7 +4,6 @@ Maps::Maps() {}
 Maps::Maps(uint64_t pid) {
     std::string a = "/proc/" + std::to_string(pid) + "/maps";
     SmartDescriptor<std::ifstream> infile(std::ifstream("/proc/" + std::to_string(pid) + "/maps"));
-    perror("ddd");
     std::string line;
     _modules.reserve(20);
     std::regex maps_pattern("(\\w+)-(\\w+) ([rwxp-]{4}) (\\w+) (\\w+):(\\w+) (\\w+)[ ]+([A-Za-z\\/\\[\\]\\-.0-9]+|)");

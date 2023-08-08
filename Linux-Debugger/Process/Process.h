@@ -23,16 +23,10 @@ namespace dbg
 
         std::string ReadString(uint64_t address);
         template <typename T> T Read(uint64_t address) {
-            T value = 0;
-            SmartDescriptor<FILE*> mem(fopen((_procPath + "mem").c_str(), "rb"));
-            fseek(mem, address, SEEK_SET);
-            fread(&value, sizeof(T), 1, mem);
-            return value;
+            return threads._threads[0].GetHardwareDebugger().Read<T>(address);
         }
         template <typename T> void Write(uint64_t address, T value) {
-            SmartDescriptor<FILE*> mem(fopen((_procPath + "mem").c_str(), "wb"));
-            fseek(mem, address, SEEK_SET);
-            fwrite(&value, sizeof(T), 1, mem);
+            threads._threads[0].GetHardwareDebugger().Write<T>(address, value);
         }
         
         uint64_t GetPid();
