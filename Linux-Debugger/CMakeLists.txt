@@ -1,6 +1,7 @@
 
-add_executable(Linux-Debugger
-    "main.cpp"
+
+
+add_library(Linux-Debugger-obj OBJECT
     "SmartDescriptor/SmartDescriptor.h"
     "Process/Process.h"
     "Process/Process.cpp"
@@ -19,3 +20,6 @@ add_executable(Linux-Debugger
     "Process/Debugger/SoftwareDebugger/SoftwareDebugger.h"
     "Process/Debugger/SoftwareDebugger/SoftwareDebugger.cpp"
 )
+
+add_library(Linux-Debugger-static STATIC $<TARGET_OBJECTS:Linux-Debugger-obj>)
+add_library(Linux-Debugger-shared SHARED $<TARGET_OBJECTS:Linux-Debugger-obj>)

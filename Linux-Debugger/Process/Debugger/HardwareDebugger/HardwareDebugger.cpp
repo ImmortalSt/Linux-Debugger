@@ -61,6 +61,13 @@ int HardwareDebugger::SetBreakpoint(uint64_t address, uint8_t condition, uint16_
 }
 
 int HardwareDebugger::DelBreakpoint(uint64_t address) {
+    for(int i = 0; i < 4; i++) {
+        if (_breakpoints[i].address == address) {
+            _breakpoints[i].address = 0;
+            _breakpoints[i].observer = 0;
+            SetRegister((x64userStructOffsets)(x64userStructOffsets::u_debugreg + sizeof(long long) * i), 0);   
+        }
+    }
     return 0;
 }
 void HardwareDebugger::StartDebugLoop() {

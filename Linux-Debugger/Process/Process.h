@@ -17,6 +17,7 @@ namespace dbg
         Maps maps;
         ThreadList threads;
 
+        Process() {};
         Process(uint64_t pid);
         Process(const char* processName);
         ~Process();
@@ -37,7 +38,7 @@ namespace dbg
         void initMaps();
         void initThreads();
 
-        uint64_t _pid;
+        uint64_t _pid = 0;
         std::string _procPath;
     };
 

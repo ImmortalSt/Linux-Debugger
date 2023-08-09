@@ -13,6 +13,7 @@ typedef void (*context_function)(struct user_regs_struct);
 
 class DebuggerBase {
 public:
+    DebuggerBase() : _pid(0) {}
     DebuggerBase(uint64_t pid) : _pid(pid) {}
     ~DebuggerBase() {}
     virtual int SetBreakpoint(uint64_t address, uint8_t condition, uint16_t size, void (*observer)(struct user_regs_struct regs)) = 0;

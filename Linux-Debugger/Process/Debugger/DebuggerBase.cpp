@@ -10,7 +10,7 @@ long long DebuggerBase::GetRegister(x64userStructOffsets offset) {
     return ptrace(PTRACE_PEEKUSER, _pid, offset, 0);
 }
 struct user_regs_struct DebuggerBase::GetContext() {
-    struct user_regs_struct regs{0};
+    struct user_regs_struct regs;
     ptrace(PTRACE_GETREGS, _pid, 0, &regs);
     return regs;
 }

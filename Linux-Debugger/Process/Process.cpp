@@ -20,7 +20,6 @@ dbg::Process::Process(const char *processName)
     dirent *entry;
     while ((entry = readdir(procDir)) != nullptr)
     {
-        char *endptr = 0;
         if (is_number(entry->d_name))
         {
             std::string path = "/proc/";

@@ -8,7 +8,7 @@ Thread::Thread(uint64_t pid) {
 Thread::~Thread() {}
 
 context Thread::GetContext() {
-    context regs{0};
+    context regs;
     ptrace(PTRACE_GETREGS, _pid, 0, &regs);
     return regs;
 }

@@ -4,12 +4,16 @@
 
 int SoftwareDebugger::SetBreakpoint(uint64_t address, uint8_t condition, uint16_t size, void(* observer)(user_regs_struct regs))
 {
+    if (size != 1) {
+        std::cout << "incorrect size";
+        return 2;
+    }
     if (condition != 1) {
         std::cout << "incorrect condition\n";
         return 1;
     }
 
-    breakpoint bp {0};
+    breakpoint bp;
     bp.oldByte = ReadByte(address);
 
     WriteByte(address, 0xCC);
@@ -34,7 +38,7 @@ int SoftwareDebugger::DelBreakpoint(uint64_t address) {
 void SoftwareDebugger::StartDebugLoop() {
     while(1) {
 
-        auto a = WaitException();
+        WaitException();
 
         auto context = GetContext();
 
@@ -44,7 +48,7 @@ void SoftwareDebugger::StartDebugLoop() {
                 context.rip -= 1;
                 SetContext(context);
                 DoDebugStep();
-                auto h = GetContext();
+                auto gd = GetContext();
                 WriteByte(bp.address, 0xCC);
                 bp.observer(context);
 
